@@ -1,14 +1,14 @@
 const e = (e) => {
     e = e || 10;
     var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
-      o = t.length,
-      s = "";
-    for (let a = 0; a < e; a++) s += t.charAt(Math.floor(Math.random() * o));
-    return s + new Date().getTime();
+      s = t.length,
+      o = "";
+    for (let a = 0; a < e; a++) o += t.charAt(Math.floor(Math.random() * s));
+    return o + new Date().getTime();
   },
   t = () => {
-    for (var e = [], t = "0123456789abcdef", o = 0; o < 36; o++)
-      e[o] = t.substr(Math.floor(16 * Math.random()), 1);
+    for (var e = [], t = "0123456789abcdef", s = 0; s < 36; s++)
+      e[s] = t.substr(Math.floor(16 * Math.random()), 1);
     return (
       (e[14] = "4"),
       (e[19] = t.substr((3 & e[19]) | 8, 1)),
@@ -16,7 +16,7 @@ const e = (e) => {
       e.join("")
     );
   };
-var o = new (class {
+var s = new (class {
   constructor(e) {
     (this.originPage = Page),
       (this.originApp = App),
@@ -48,28 +48,28 @@ var o = new (class {
   }
   _proxyApp() {
     const t = this;
-    App = (o) => {
-      const s = o.onShow || function () {};
-      (o.onShow = function () {
-        const o = e();
+    App = (s) => {
+      const o = s.onShow || function () {};
+      (s.onShow = function () {
+        const s = e();
         return (
-          wx.setStorage({ key: "techsun_wx_mark_user", data: o }),
+          wx.setStorage({ key: "techsun_wx_mark_user", data: s }),
           t.pages.push({ time: new Date().getTime(), page: "" }),
-          (t.commonData.markuser = o),
+          (t.commonData.markuser = s),
           (t.commonData.markuv = t._markUv()),
-          s.apply(this, arguments)
+          o.apply(this, arguments)
         );
       }),
-        t.originApp(o);
+        t.originApp(s);
     };
   }
-  updateOpenId(e = "") {
+  setUserId(e = "") {
     this.commonData.customer_id = e;
   }
   _proxyPage() {
     const e = this;
     Page = (t) => {
-      const o = t.onShow || function () {};
+      const s = t.onShow || function () {};
       t.onShow = function () {
         return (
           e.commonData.markuser ||
@@ -86,27 +86,32 @@ var o = new (class {
                 e.commonData.markuv = t;
               },
             }),
-          o.apply(this, arguments)
+          s.apply(this, arguments)
         );
       };
-      const s = t.onPullDownRefresh || function () {};
+      const o = t.onPullDownRefresh || function () {};
       t.onPullDownRefresh = function () {
-        return s.apply(this, arguments);
+        return o.apply(this, arguments);
       };
       const a = t.onHide || function () {};
       (t.onHide = function () {
         let t = "",
-          o = getCurrentPages();
-        if (o && o.length) {
-          t = o[o.length - 1].__route__;
+          s = getCurrentPages();
+        if (s && s.length) {
+          t = s[s.length - 1].__route__;
         }
         if (
           (e.pages.push({ time: new Date().getTime(), page: t }),
           e.pages.length > 1)
         ) {
           const t = e.pages[e.pages.length - 2] || {},
-            o = (e.pages[e.pages.length - 1] || {}).time - t.time;
-          e.queue.push({ event_key: "$wxPageView", page: t.page, viewTime: o }),
+            s = e.pages[e.pages.length - 1] || {},
+            o = s.time - t.time;
+          e.queue.push({
+            event_key: "$wxPageView",
+            string2: s.page,
+            decimal1: o,
+          }),
             e._reporter();
         }
         return a.apply(this, arguments);
@@ -134,8 +139,8 @@ var o = new (class {
   }
   _markUv() {
     const t = new Date();
-    let o = wx.getStorageSync("techsun_wx_mark_uv") || "";
-    const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
+    let s = wx.getStorageSync("techsun_wx_mark_uv") || "";
+    const o = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
       a =
         t.getFullYear() +
         "/" +
@@ -144,16 +149,16 @@ var o = new (class {
         t.getDate() +
         " 23:59:59";
     return (
-      ((!o && !s) || t.getTime() > 1 * s) &&
-        ((o = e()),
-        wx.setStorage({ key: "techsun_wx_mark_uv", data: o }),
+      ((!s && !o) || t.getTime() > 1 * o) &&
+        ((s = e()),
+        wx.setStorage({ key: "techsun_wx_mark_uv", data: s }),
         wx.setStorage({
           key: "techsun_wx_mark_uv_time",
           data: new Date(a).getTime(),
         }),
         this.queue.push({ event_key: "$wxPageLoad" }),
         this._reporter()),
-      o
+      s
     );
   }
   track(e, t) {
@@ -175,9 +180,10 @@ var o = new (class {
         data: {
           ...e,
           project: this.commonData.project,
-          mark_user: this.commonData.markuser,
+          string3: this.commonData.markuser,
           event_time: new Date().getTime(),
           event_type: "track",
+          detail_id: "",
           customer_id: this.commonData.customer_id,
           channel: this.commonData.channel,
           event_id: t(),
@@ -193,4 +199,4 @@ var o = new (class {
     }
   }
 })();
-export { o as default };
+export { s as default };

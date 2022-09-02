@@ -14,7 +14,7 @@
       var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
         o = t.length,
         s = "";
-      for (let a = 0; a < e; a++) s += t.charAt(Math.floor(Math.random() * o));
+      for (let n = 0; n < e; n++) s += t.charAt(Math.floor(Math.random() * o));
       return s + new Date().getTime();
     },
     t = () => {
@@ -74,7 +74,7 @@
           t.originApp(o);
       };
     }
-    updateOpenId(e = "") {
+    setUserId(e = "") {
       this.commonData.customer_id = e;
     }
     _proxyPage() {
@@ -104,7 +104,7 @@
         t.onPullDownRefresh = function () {
           return s.apply(this, arguments);
         };
-        const a = t.onHide || function () {};
+        const n = t.onHide || function () {};
         (t.onHide = function () {
           let t = "",
             o = getCurrentPages();
@@ -116,15 +116,16 @@
             e.pages.length > 1)
           ) {
             const t = e.pages[e.pages.length - 2] || {},
-              o = (e.pages[e.pages.length - 1] || {}).time - t.time;
+              o = e.pages[e.pages.length - 1] || {},
+              s = o.time - t.time;
             e.queue.push({
               event_key: "$wxPageView",
-              page: t.page,
-              viewTime: o,
+              string2: o.page,
+              decimal1: s,
             }),
               e._reporter();
           }
-          return a.apply(this, arguments);
+          return n.apply(this, arguments);
         }),
           e.originPage(t);
       };
@@ -151,7 +152,7 @@
       const t = new Date();
       let o = wx.getStorageSync("techsun_wx_mark_uv") || "";
       const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
-        a =
+        n =
           t.getFullYear() +
           "/" +
           (t.getMonth() + 1) +
@@ -164,7 +165,7 @@
           wx.setStorage({ key: "techsun_wx_mark_uv", data: o }),
           wx.setStorage({
             key: "techsun_wx_mark_uv_time",
-            data: new Date(a).getTime(),
+            data: new Date(n).getTime(),
           }),
           this.queue.push({ event_key: "$wxPageLoad" }),
           this._reporter()),
@@ -190,9 +191,10 @@
           data: {
             ...e,
             project: this.commonData.project,
-            mark_user: this.commonData.markuser,
+            string3: this.commonData.markuser,
             event_time: new Date().getTime(),
             event_type: "track",
+            detail_id: "",
             customer_id: this.commonData.customer_id,
             channel: this.commonData.channel,
             event_id: t(),

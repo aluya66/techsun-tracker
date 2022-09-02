@@ -9,19 +9,21 @@
 
 ### 项目结构
 
-├─ techsun-web-tracker.cjs.js //web 端
+```
+├── techsun-web-tracker.cjs.js //web 端
 │
-├─ techsun-web-tracker.d.ts web 端
+├── techsun-web-tracker.d.ts web 端
 │
-├─ techsun-web-tracker.esm.js //web 端
+├── techsun-web-tracker.esm.js //web 端
 │
-├─ techsun-web-tracker.js // web 端
+├── techsun-web-tracker.js // web 端
 │
-├─ techsun-wx-tracker.cjs.js //小程序端
+├── techsun-wx-tracker.cjs.js //小程序端
 │
-├─ techsun-wx-tracker.esm.js // 小程序端
+├── techsun-wx-tracker.esm.js // 小程序端
 │
-├─ techsun-wx-tracker.js // 小程序端
+└── techsun-wx-tracker.js // 小程序端
+```
 
 ### 1、web 端
 

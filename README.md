@@ -95,16 +95,20 @@
   import TechsunWxTrack from ".xx/techsun-wx-tracker";
   ```
 
-- 初始化
+初始化
 
-  ```
-   TechsunWxTrack.init({
-    server_url: 'http://dev-cdp-02:50000',  //上报地址
-    project: 'asus-cn',  // 固定
-    channel: "", // 从跳转的参数中获取或者手动配置 见埋点文档渠道
-    autoTrack: true, // 默认为true,开启自动检测页面浏览时长和浏览记录以及UV
-  })
-  ```
+> 在小程序 `app.js` 中 `App` 初始化
+
+```
+ TechsunWxTrack.init({
+  server_url: 'http://dev-cdp-02:50000',  //上报地址
+  project: 'asus-cn',  // 固定
+  channel: "", // 从跳转的参数中获取或者手动配置 见埋点文档渠道
+  autoTrack: true, // 默认为true,开启自动检测页面浏览时长和浏览记录以及UV
+})
+```
+
+> 上报地址需要在微信公众平台小程序管理配置合法域名。
 
 - 更新用户
 

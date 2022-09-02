@@ -92,7 +92,7 @@
     从仓库中下载代码按照对应模式引入
 
     引入techsun-wx-tracker.js 放入本地项目某目录下(例如：lib)
-  import TechsunWxTrack from ".xx/techsun-wx-tracker";
+  import techsunWxTrack from ".xx/techsun-wx-tracker";
   ```
 
 初始化
@@ -100,7 +100,7 @@
 > 在小程序 `app.js` 中 `App` 初始化
 
 ```
- TechsunWxTrack.init({
+ techsunWxTrack.init({
   server_url: 'http://dev-cdp-02:50000',  //上报地址
   project: 'asus-cn',  // 固定
   channel: "", // 从跳转的参数中获取或者手动配置 见埋点文档渠道
@@ -113,14 +113,14 @@
 - 更新用户
 
   ```
-      TechsunWxTrack.setUserId("userId")
+      techsunWxTrack.setUserId("userId")
   ```
 
 - 自定义事件(示例：$enterPoint 自定义)
 
   ```
      //SDK 初始化后, 收集页面事件
-  TechsunWxTrack.track(
+  techsunWxTrack.track(
       "$enterPoint",
       {
         //如果有需要属性，则在此添加  todo...

@@ -183,20 +183,21 @@
     }
     _flush() {
       if (this.queue.length > 0) {
-        const e = this.queue.shift();
+        const e = this.queue.shift(),
+          o = this;
         this.wxRequest({
           url: this.commonData.server_url,
           timeout: 3e4,
           method: "POST",
           data: {
             ...e,
-            project: this.commonData.project,
-            string3: this.commonData.markuser,
+            project: o.commonData.project,
+            string3: o.commonData.markuser,
             event_time: new Date().getTime(),
             event_type: "track",
             detail_id: "",
-            customer_id: this.commonData.customer_id,
-            channel: this.commonData.channel,
+            customer_id: o.commonData.customer_id,
+            channel: o.commonData.channel,
             event_id: t(),
           },
           success: () => {},
@@ -204,7 +205,7 @@
             console.error(e);
           },
           complete: () => {
-            this._flush(), clearTimeout(this.timer), (this.timer = null);
+            o._flush(), clearTimeout(o.timer), (o.timer = null);
           },
         });
       }

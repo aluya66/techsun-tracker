@@ -97,7 +97,7 @@
 
 初始化
 
-> 在小程序 `app.js` 中 `App` 初始化
+> 在小程序 `app.js` 中 `App`前初始化
 
 ```
  techsunWxTrack.init({

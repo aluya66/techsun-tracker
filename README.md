@@ -30,8 +30,7 @@
 - npm 方式
 
   ```
-    npm install techsun-web-tracker
-    import techsunTracker from "techsun-web-tracker"
+    暂未提供、看需要
   ```
 
 - 引入方式

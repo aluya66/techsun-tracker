@@ -40,7 +40,7 @@
     从仓库中下载代码按照对应模式引入
 
     示例：
-     1、techsun-tracker.js 放入本地项目某目录下(例如：lib)
+     1、techsun-web-tracker.js 放入本地项目某目录下(例如：lib)
      import // require
 
   2、<script src="lib/techsun-web-tracker.js"></script> （在初始化前引入）

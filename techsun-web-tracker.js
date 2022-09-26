@@ -42,6 +42,10 @@
       );
     };
   return new (class {
+    data;
+    queue;
+    timer;
+    pages;
     constructor() {
       (this.data = {
         historyTracker: !1,
@@ -52,6 +56,7 @@
         markuv: "",
         channel: "",
         customer_id: "",
+        member_id: "",
         event_type: "",
         loc: {},
         sys: {},
@@ -113,8 +118,8 @@
       }
       return { markuser: r, markUv: a };
     }
-    setUserId(e) {
-      this.data.customer_id = e;
+    setUserId(e, t) {
+      (this.data.customer_id = e), (this.data.member_id = t);
     }
     captureHideEvents(e, t) {
       let i,
@@ -161,8 +166,8 @@
       this.queue.push({ event_key: "$pageView", string2: a.page, decimal1: s }),
         this.report(i);
     }
-    track(e, t, i) {
-      this.queue.push({ event_key: e, detail_id: t, ...i }), this.report();
+    track(e, t) {
+      this.queue.push({ source: e, event_key: "$click", ...t }), this.report();
     }
     captureEvents(e, t, i) {
       e.forEach((e) => {
@@ -199,7 +204,9 @@
             string3: this.data.markuser,
             event_time: new Date().getTime(),
             event_type: "track",
-            detail_id: e.detail_id ? e.detail_id : "",
+            member_id: this.data.member_id,
+            source: e.source ? e.source : "",
+            detail_id: this.data.customer_id,
             customer_id: this.data.customer_id,
             channel: this.data.channel,
             event_id: a(),

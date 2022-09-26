@@ -4,7 +4,7 @@ const e = (e) => {
     var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
       o = t.length,
       s = "";
-    for (let a = 0; a < e; a++) s += t.charAt(Math.floor(Math.random() * o));
+    for (let r = 0; r < e; r++) s += t.charAt(Math.floor(Math.random() * o));
     return s + new Date().getTime();
   },
   t = () => {
@@ -31,6 +31,7 @@ var o = new (class {
         markuv: "",
         channel: "",
         customer_id: "",
+        member_id: "",
         loc: {},
         sys: {},
         delay: 1e3,
@@ -64,8 +65,8 @@ var o = new (class {
         t.originApp(o);
     };
   }
-  setUserId(e = "") {
-    this.commonData.customer_id = e;
+  setUserId(e = "", t = "") {
+    (this.commonData.customer_id = e), (this.commonData.member_id = t);
   }
   _proxyPage() {
     const e = this;
@@ -94,7 +95,7 @@ var o = new (class {
       t.onPullDownRefresh = function () {
         return s.apply(this, arguments);
       };
-      const a = t.onHide || function () {};
+      const r = t.onHide || function () {};
       (t.onHide = function () {
         let t = "",
           o = getCurrentPages();
@@ -115,7 +116,7 @@ var o = new (class {
           }),
             e._reporter();
         }
-        return a.apply(this, arguments);
+        return r.apply(this, arguments);
       }),
         e.originPage(t);
     };
@@ -142,7 +143,7 @@ var o = new (class {
     const t = new Date();
     let o = wx.getStorageSync("techsun_wx_mark_uv") || "";
     const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
-      a =
+      r =
         t.getFullYear() +
         "/" +
         (t.getMonth() + 1) +
@@ -155,15 +156,15 @@ var o = new (class {
         wx.setStorage({ key: "techsun_wx_mark_uv", data: o }),
         wx.setStorage({
           key: "techsun_wx_mark_uv_time",
-          data: new Date(a).getTime(),
+          data: new Date(r).getTime(),
         }),
         this.queue.push({ event_key: "$wxPageLoad" }),
         this._reporter()),
       o
     );
   }
-  track(e, t, o) {
-    this.queue.push({ event_key: e, detail_id: t, ...o }), this._reporter();
+  track(e, t) {
+    this.queue.push({ source: e, event_key: "$click", ...t }), this._reporter();
   }
   _reporter() {
     this.timer ||
@@ -185,7 +186,9 @@ var o = new (class {
           string3: o.commonData.markuser,
           event_time: new Date().getTime(),
           event_type: "track",
-          detail_id: e.detail_id ? e.detail_id : "",
+          member_id: this.commonData.member_id,
+          source: e.source ? e.source : "",
+          detail_id: o.commonData.customer_id,
           customer_id: o.commonData.customer_id,
           channel: o.commonData.channel,
           event_id: t(),

@@ -15,6 +15,7 @@ interface DefaultOptons {
   hashTracker: boolean;
   delay: number;
   customer_id: string;
+  member_id: string;
   channel: string;
   detail_id: string;
   event_id: string;
@@ -37,11 +38,11 @@ declare class TechsunTracker {
   constructor();
   init(options: initOptions): void;
   private markUv;
-  setUserId<T extends DefaultOptons["customer_id"]>(userId: T): void;
+  setUserId<T extends string>(userId: T, memberId: T): void;
   private captureHideEvents;
   private initPageUv;
   private pagePv;
-  track(event_key: string, exact: object): void;
+  track(source: string, exact: object): void;
   private captureEvents;
   private report;
   private formatParams;

@@ -2,9 +2,9 @@ const e = (e) => {
     e = e || 10;
     var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
       o = t.length,
-      a = "";
-    for (let s = 0; s < e; s++) a += t.charAt(Math.floor(Math.random() * o));
-    return a + new Date().getTime();
+      s = "";
+    for (let a = 0; a < e; a++) s += t.charAt(Math.floor(Math.random() * o));
+    return s + new Date().getTime();
   },
   t = () => {
     for (var e = [], t = "0123456789abcdef", o = 0; o < 36; o++)
@@ -30,6 +30,7 @@ var o = new (class {
         markuv: "",
         channel: "",
         customer_id: "",
+        member_id: "",
         loc: {},
         sys: {},
         delay: 1e3,
@@ -49,7 +50,7 @@ var o = new (class {
   _proxyApp() {
     const t = this;
     App = (o) => {
-      const a = o.onShow || function () {};
+      const s = o.onShow || function () {};
       (o.onShow = function () {
         const o = e();
         return (
@@ -57,14 +58,14 @@ var o = new (class {
           t.pages.push({ time: new Date().getTime(), page: "" }),
           (t.commonData.markuser = o),
           (t.commonData.markuv = t._markUv()),
-          a.apply(this, arguments)
+          s.apply(this, arguments)
         );
       }),
         t.originApp(o);
     };
   }
-  setUserId(e = "") {
-    this.commonData.customer_id = e;
+  setUserId(e = "", t = "") {
+    (this.commonData.customer_id = e), (this.commonData.member_id = t);
   }
   _proxyPage() {
     const e = this;
@@ -89,11 +90,11 @@ var o = new (class {
           o.apply(this, arguments)
         );
       };
-      const a = t.onPullDownRefresh || function () {};
+      const s = t.onPullDownRefresh || function () {};
       t.onPullDownRefresh = function () {
-        return a.apply(this, arguments);
+        return s.apply(this, arguments);
       };
-      const s = t.onHide || function () {};
+      const a = t.onHide || function () {};
       (t.onHide = function () {
         let t = "",
           o = getCurrentPages();
@@ -106,15 +107,15 @@ var o = new (class {
         ) {
           const t = e.pages[e.pages.length - 2] || {},
             o = e.pages[e.pages.length - 1] || {},
-            a = o.time - t.time;
+            s = o.time - t.time;
           e.queue.push({
             event_key: "$wxPageView",
             string2: o.page,
-            decimal1: a,
+            decimal1: s,
           }),
             e._reporter();
         }
-        return s.apply(this, arguments);
+        return a.apply(this, arguments);
       }),
         e.originPage(t);
     };
@@ -140,8 +141,8 @@ var o = new (class {
   _markUv() {
     const t = new Date();
     let o = wx.getStorageSync("techsun_wx_mark_uv") || "";
-    const a = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
-      s =
+    const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
+      a =
         t.getFullYear() +
         "/" +
         (t.getMonth() + 1) +
@@ -149,20 +150,20 @@ var o = new (class {
         t.getDate() +
         " 23:59:59";
     return (
-      ((!o && !a) || t.getTime() > 1 * a) &&
+      ((!o && !s) || t.getTime() > 1 * s) &&
         ((o = e()),
         wx.setStorage({ key: "techsun_wx_mark_uv", data: o }),
         wx.setStorage({
           key: "techsun_wx_mark_uv_time",
-          data: new Date(s).getTime(),
+          data: new Date(a).getTime(),
         }),
         this.queue.push({ event_key: "$wxPageLoad" }),
         this._reporter()),
       o
     );
   }
-  track(e, t, o) {
-    this.queue.push({ event_key: e, detail_id: t, ...o }), this._reporter();
+  track(e, t) {
+    this.queue.push({ source: e, event_key: "$click", ...t }), this._reporter();
   }
   _reporter() {
     this.timer ||
@@ -184,7 +185,9 @@ var o = new (class {
           string3: o.commonData.markuser,
           event_time: new Date().getTime(),
           event_type: "track",
-          detail_id: e.detail_id ? e.detail_id : "",
+          member_id: this.commonData.member_id,
+          source: e.source ? e.source : "",
+          detail_id: o.commonData.customer_id,
           customer_id: o.commonData.customer_id,
           channel: o.commonData.channel,
           event_id: t(),

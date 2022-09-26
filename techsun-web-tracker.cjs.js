@@ -32,10 +32,6 @@ const t = (e) => {
     );
   };
 var s = new (class {
-  data;
-  queue;
-  timer;
-  pages;
   constructor() {
     (this.data = {
       historyTracker: !1,
@@ -155,8 +151,8 @@ var s = new (class {
     this.queue.push({ event_key: "$pageView", string2: i.page, decimal1: s }),
       this.report(a);
   }
-  track(e, t) {
-    this.queue.push({ event_key: e, ...t }), this.report();
+  track(e, t, a) {
+    this.queue.push({ event_key: e, detail_id: t, ...a }), this.report();
   }
   captureEvents(e, t, a) {
     e.forEach((e) => {
@@ -178,34 +174,35 @@ var s = new (class {
           this.flush();
         }, this.data.delay));
   }
-  formatParams = (e) => {
+  formatParams(e) {
     const t = [];
     for (const a in e)
       t.push(`${encodeURIComponent(a)}=${encodeURIComponent(e[a])}`);
     return t.join("&");
-  };
+  }
   flush() {
     if (this.queue.length > 0) {
-      const e = {
-        ...this.queue.shift(),
-        project: this.data.project,
-        string3: this.data.markuser,
-        event_time: new Date().getTime(),
-        event_type: "track",
-        detail_id: "",
-        customer_id: this.data.customer_id,
-        channel: this.data.channel,
-        event_id: i(),
-      };
-      let t = new Blob([`${this.formatParams(Object.assign({}, e))}`], {
+      const e = this.queue.shift(),
+        t = {
+          ...e,
+          project: this.data.project,
+          string3: this.data.markuser,
+          event_time: new Date().getTime(),
+          event_type: "track",
+          detail_id: e.detail_id ? e.detail_id : "",
+          customer_id: this.data.customer_id,
+          channel: this.data.channel,
+          event_id: i(),
+        };
+      let a = new Blob([`${this.formatParams(Object.assign({}, t))}`], {
         type: "application/x-www-form-urlencoded",
       });
-      if (navigator.sendBeacon) navigator.sendBeacon(this.data.server_url, t);
+      if (navigator.sendBeacon) navigator.sendBeacon(this.data.server_url, a);
       else {
-        const t = new XMLHttpRequest();
-        t.open("POST", this.data.server_url, !1),
-          t.setRequestHeader("Content-Type", "application/json; charset=UTF-8"),
-          t.send(JSON.stringify(e));
+        const e = new XMLHttpRequest();
+        e.open("POST", this.data.server_url, !1),
+          e.setRequestHeader("Content-Type", "application/json; charset=UTF-8"),
+          e.send(JSON.stringify(t));
       }
       this.flush(), clearTimeout(this.timer), (this.timer = null);
     }

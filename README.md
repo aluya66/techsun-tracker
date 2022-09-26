@@ -62,15 +62,20 @@
 - 更新用户
 
   ```
-      techsunTracker.setUserId("userId")
+    /*用户登录 */
+    在初始化后判断缓存是否存在用户ID(此ID为使用者提供)
+    如果存在则调用此方法更新用户id。
+    不存在则忽略
+    techsunTracker.setUserId("userId")
   ```
 
-- 自定义事件(示例：$enterPoint 自定义)
+- 自定义事件(示例：$enterPoint 自定义, "web-会员中心-积分"，每个自定义事件的位置，按照埋点文件)
 
   ```
      //SDK 初始化后, 收集页面事件
   techsunTracker.track(
       "$enterPoint",
+      "web-会员中心-积分",
       {
         //如果有需要属性，则在此添加  todo...
       }
@@ -112,15 +117,21 @@
 - 更新用户
 
   ```
-      techsunWxTrack.setUserId("userId")
+    在小程序初始化后判断缓存是否存在用户ID（(此ID为使用者提供)
+    如果存在则调用此方法更新用户id。
+    不存在则忽略
+
+
+    techsunWxTrack.setUserId("userId")
   ```
 
-- 自定义事件(示例：$enterPoint 自定义)
+- 自定义事件(示例：$enterPoint 自定义, "微信小程序-会员中心-积分"，每个自定义事件的位置，按照埋点文件)
 
   ```
      //SDK 初始化后, 收集页面事件
   techsunWxTrack.track(
       "$enterPoint",
+      "微信小程序-会员中心-积分"
       {
         //如果有需要属性，则在此添加  todo...
       }

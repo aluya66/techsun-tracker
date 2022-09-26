@@ -14,7 +14,7 @@
       var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
         o = t.length,
         s = "";
-      for (let n = 0; n < e; n++) s += t.charAt(Math.floor(Math.random() * o));
+      for (let a = 0; a < e; a++) s += t.charAt(Math.floor(Math.random() * o));
       return s + new Date().getTime();
     },
     t = () => {
@@ -104,7 +104,7 @@
         t.onPullDownRefresh = function () {
           return s.apply(this, arguments);
         };
-        const n = t.onHide || function () {};
+        const a = t.onHide || function () {};
         (t.onHide = function () {
           let t = "",
             o = getCurrentPages();
@@ -125,7 +125,7 @@
             }),
               e._reporter();
           }
-          return n.apply(this, arguments);
+          return a.apply(this, arguments);
         }),
           e.originPage(t);
       };
@@ -152,7 +152,7 @@
       const t = new Date();
       let o = wx.getStorageSync("techsun_wx_mark_uv") || "";
       const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
-        n =
+        a =
           t.getFullYear() +
           "/" +
           (t.getMonth() + 1) +
@@ -165,15 +165,15 @@
           wx.setStorage({ key: "techsun_wx_mark_uv", data: o }),
           wx.setStorage({
             key: "techsun_wx_mark_uv_time",
-            data: new Date(n).getTime(),
+            data: new Date(a).getTime(),
           }),
           this.queue.push({ event_key: "$wxPageLoad" }),
           this._reporter()),
         o
       );
     }
-    track(e, t) {
-      this.queue.push({ event_key: e, ...t }), this._reporter();
+    track(e, t, o) {
+      this.queue.push({ event_key: e, detail_id: t, ...o }), this._reporter();
     }
     _reporter() {
       this.timer ||
@@ -195,7 +195,7 @@
             string3: o.commonData.markuser,
             event_time: new Date().getTime(),
             event_type: "track",
-            detail_id: "",
+            detail_id: e.detail_id ? e.detail_id : "",
             customer_id: o.commonData.customer_id,
             channel: o.commonData.channel,
             event_id: t(),

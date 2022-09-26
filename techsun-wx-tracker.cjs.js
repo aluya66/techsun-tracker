@@ -162,8 +162,8 @@ var o = new (class {
       o
     );
   }
-  track(e, t) {
-    this.queue.push({ event_key: e, ...t }), this._reporter();
+  track(e, t, o) {
+    this.queue.push({ event_key: e, detail_id: t, ...o }), this._reporter();
   }
   _reporter() {
     this.timer ||
@@ -185,7 +185,7 @@ var o = new (class {
           string3: o.commonData.markuser,
           event_time: new Date().getTime(),
           event_type: "track",
-          detail_id: "",
+          detail_id: e.detail_id ? e.detail_id : "",
           customer_id: o.commonData.customer_id,
           channel: o.commonData.channel,
           event_id: t(),

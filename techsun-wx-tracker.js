@@ -14,7 +14,7 @@
       var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
         o = t.length,
         s = "";
-      for (let r = 0; r < e; r++) s += t.charAt(Math.floor(Math.random() * o));
+      for (let a = 0; a < e; a++) s += t.charAt(Math.floor(Math.random() * o));
       return s + new Date().getTime();
     },
     t = () => {
@@ -35,6 +35,7 @@
         (this.timer = null),
         (this.pages = []),
         (this.queue = []),
+        (this.extendData = {}),
         (this.commonData = {
           project: "asus-cn",
           markuser: "",
@@ -105,7 +106,7 @@
         t.onPullDownRefresh = function () {
           return s.apply(this, arguments);
         };
-        const r = t.onHide || function () {};
+        const a = t.onHide || function () {};
         (t.onHide = function () {
           let t = "",
             o = getCurrentPages();
@@ -119,14 +120,11 @@
             const t = e.pages[e.pages.length - 2] || {},
               o = e.pages[e.pages.length - 1] || {},
               s = o.time - t.time;
-            e.queue.push({
-              event_key: "$wxPageView",
-              string2: o.page,
-              decimal1: s,
-            }),
+            e.queue.push({ event_key: "$pageview", dim1: o.page, decimal1: s }),
+              e.queue.push({ event_key: "$uniqueview", dim1: o.page }),
               e._reporter();
           }
-          return r.apply(this, arguments);
+          return a.apply(this, arguments);
         }),
           e.originPage(t);
       };
@@ -153,7 +151,7 @@
       const t = new Date();
       let o = wx.getStorageSync("techsun_wx_mark_uv") || "";
       const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
-        r =
+        a =
           t.getFullYear() +
           "/" +
           (t.getMonth() + 1) +
@@ -166,7 +164,7 @@
           wx.setStorage({ key: "techsun_wx_mark_uv", data: o }),
           wx.setStorage({
             key: "techsun_wx_mark_uv_time",
-            data: new Date(r).getTime(),
+            data: new Date(a).getTime(),
           }),
           this.queue.push({ event_key: "$wxPageLoad" }),
           this._reporter()),
@@ -177,6 +175,11 @@
       this.queue.push({ source: e, event_key: "$click", ...t }),
         this._reporter();
     }
+    setPagePVData(e) {
+      setTimeout(() => {
+        this.extendData = { ...e };
+      }, this.commonData.delay + 500);
+    }
     _reporter() {
       this.timer ||
         (this.timer = setTimeout(() => {
@@ -186,16 +189,14 @@
     _flush() {
       if (this.queue.length > 0) {
         const e = this.queue.shift(),
-          o = this;
-        this.wxRequest({
-          url: this.commonData.server_url,
-          timeout: 3e4,
-          method: "POST",
-          data: {
+          o = this,
+          s = new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
+          a = {
             ...e,
             project: o.commonData.project,
             string3: o.commonData.markuser,
-            event_time: new Date().getTime(),
+            event_time:
+              "$uniqueview" === e.event_key ? s : new Date().getTime(),
             event_type: "track",
             member_id: this.commonData.member_id,
             source: e.source ? e.source : "",
@@ -203,16 +204,23 @@
             customer_id: o.commonData.customer_id,
             channel: o.commonData.channel,
             event_id: t(),
-          },
-          success: () => {},
-          fail: ({ errMsg: e }) => {
-            console.error(e);
-          },
-          complete: () => {
-            o._flush(), clearTimeout(o.timer), (o.timer = null);
-          },
-        });
-      }
+          };
+        ("$uniqueview" !== e.event_key && "$pageview" !== e.event_key) ||
+          Object.assign(a, { ...o.extendData }),
+          this.wxRequest({
+            url: this.commonData.server_url,
+            timeout: 3e4,
+            method: "POST",
+            data: { ...a },
+            success: () => {},
+            fail: ({ errMsg: e }) => {
+              console.error(e);
+            },
+            complete: () => {
+              o._flush(), clearTimeout(o.timer), (o.timer = null);
+            },
+          });
+      } else this.extendData = {};
     }
   })();
   return o;

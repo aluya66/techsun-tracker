@@ -35,6 +35,7 @@ declare class TechsunTracker {
   private queue;
   private timer;
   private pages;
+  private extendData;
   constructor();
   init(options: initOptions): void;
   private markUv;
@@ -42,6 +43,7 @@ declare class TechsunTracker {
   private captureHideEvents;
   private initPageUv;
   private pagePv;
+  setPagePVData(data: any): void;
   track(source: string, exact: object): void;
   private captureEvents;
   private report;

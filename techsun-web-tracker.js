@@ -18,22 +18,22 @@
   const t = (e) => {
       const t = history[e];
       return function () {
-        const i = t.apply(this, arguments),
-          a = new Event(e);
-        return window.dispatchEvent(a), i;
+        const a = t.apply(this, arguments),
+          i = new Event(e);
+        return window.dispatchEvent(i), a;
       };
     },
-    i = (e) => {
+    a = (e) => {
       e = e || 10;
       var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
-        i = t.length,
-        a = "";
-      for (let s = 0; s < e; s++) a += t.charAt(Math.floor(Math.random() * i));
-      return a + new Date().getTime();
+        a = t.length,
+        i = "";
+      for (let s = 0; s < e; s++) i += t.charAt(Math.floor(Math.random() * a));
+      return i + new Date().getTime();
     },
-    a = () => {
-      for (var e = [], t = "0123456789abcdef", i = 0; i < 36; i++)
-        e[i] = t.substr(Math.floor(16 * Math.random()), 1);
+    i = () => {
+      for (var e = [], t = "0123456789abcdef", a = 0; a < 36; a++)
+        e[a] = t.substr(Math.floor(16 * Math.random()), 1);
       return (
         (e[14] = "4"),
         (e[19] = t.substr((3 & e[19]) | 8, 1)),
@@ -46,6 +46,7 @@
     queue;
     timer;
     pages;
+    extendData;
     constructor() {
       (this.data = {
         historyTracker: !1,
@@ -60,10 +61,11 @@
         event_type: "",
         loc: {},
         sys: {},
-        delay: 1500,
+        delay: 1e3,
       }),
         (this.queue = []),
         (this.pages = []),
+        (this.extendData = {}),
         (this.timer = null),
         (window.history.pushState = t("pushState")),
         (window.history.replaceState = t("replaceState"));
@@ -90,11 +92,11 @@
     }
     markUv() {
       const t = new Date();
-      let a = window.localStorage.getItem(e.markuv) || "",
+      let i = window.localStorage.getItem(e.markuv) || "",
         s = window.localStorage.getItem(e.markuvtime) || "",
-        r = window.localStorage.getItem(e.markuser) || "";
-      (this.data.markuser = r), (this.data.markuv = a);
-      const n =
+        n = window.localStorage.getItem(e.markuser) || "";
+      (this.data.markuser = n), (this.data.markuv = i);
+      const r =
         t.getFullYear() +
         "/" +
         (t.getMonth() + 1) +
@@ -102,49 +104,49 @@
         t.getDate() +
         " 23:59:59";
       if (
-        (r ||
-          ((r = i()),
-          (this.data.markuser = r),
-          window.localStorage.setItem(e.markuser, r)),
-        (!a && !s) || t.getTime() > 1 * Number(s))
+        (n ||
+          ((n = a()),
+          (this.data.markuser = n),
+          window.localStorage.setItem(e.markuser, n)),
+        (!i && !s) || t.getTime() > 1 * Number(s))
       ) {
-        a = i();
-        const t = new Date(n).getTime() + "";
-        window.localStorage.setItem(e.markuv, a),
+        i = a();
+        const t = new Date(r).getTime() + "";
+        window.localStorage.setItem(e.markuv, i),
           window.localStorage.setItem(e.markuvtime, t),
-          (this.data.markuv = a),
+          (this.data.markuv = i),
           this.queue.push({ event_key: "$pageLoad" }),
           this.report();
       }
-      return { markuser: r, markUv: a };
+      return { markuser: n, markUv: i };
     }
     setUserId(e, t) {
       (this.data.customer_id = e), (this.data.member_id = t);
     }
     captureHideEvents(e, t) {
-      let i,
-        a,
+      let a,
+        i,
         s,
-        r = document;
-      void 0 !== r.hidden
-        ? ((i = "hidden"), (s = "visibilitychange"), (a = "visibilityState"))
-        : void 0 !== r.mozHidden
-        ? ((i = "mozHidden"),
+        n = document;
+      void 0 !== n.hidden
+        ? ((a = "hidden"), (s = "visibilitychange"), (i = "visibilityState"))
+        : void 0 !== n.mozHidden
+        ? ((a = "mozHidden"),
           (s = "mozvisibilitychange"),
-          (a = "mozVisibilityState"))
-        : void 0 !== r.msHidden
-        ? ((i = "msHidden"),
+          (i = "mozVisibilityState"))
+        : void 0 !== n.msHidden
+        ? ((a = "msHidden"),
           (s = "msvisibilitychange"),
-          (a = "msVisibilityState"))
-        : void 0 !== r.webkitHidden &&
-          ((i = "webkitHidden"),
+          (i = "msVisibilityState"))
+        : void 0 !== n.webkitHidden &&
+          ((a = "webkitHidden"),
           (s = "webkitvisibilitychange"),
-          (a = "webkitVisibilityState"));
-      const n = window.location;
+          (i = "webkitVisibilityState"));
+      const r = window.location;
       document.addEventListener(
         s,
         () => {
-          r[a] !== i ? this.initPageUv(e, n) : this.pagePv(e, n, !0);
+          n[i] !== a ? this.initPageUv(e, r) : this.pagePv(e, r, !0);
         },
         !1
       );
@@ -156,28 +158,34 @@
       }),
         this.markUv();
     }
-    pagePv(e, t, i = !1) {
+    pagePv(e, t, a = !1) {
       this.pages.push({
         time: new Date().getTime(),
         page: "history-page" == e ? t.pathname : t.hash,
       });
-      const a = this.pages[this.pages.length - 2] || {},
-        s = (this.pages[this.pages.length - 1] || {}).time - a.time;
-      this.queue.push({ event_key: "$pageView", string2: a.page, decimal1: s }),
-        this.report(i);
+      const i = this.pages[this.pages.length - 2] || {},
+        s = (this.pages[this.pages.length - 1] || {}).time - i.time;
+      this.queue.push({ event_key: "$pageview", dim1: i.page, decimal1: s }),
+        this.queue.push({ event_key: "$uniqueview", dim1: i.page }),
+        this.report(a);
+    }
+    setPagePVData(e) {
+      setTimeout(() => {
+        this.extendData = { ...e };
+      }, this.data.delay + 500);
     }
     track(e, t) {
       this.queue.push({ source: e, event_key: "$click", ...t }), this.report();
     }
-    captureEvents(e, t, i) {
+    captureEvents(e, t, a) {
       e.forEach((e) => {
-        window.addEventListener(e, (i) => {
-          const a = window.location;
+        window.addEventListener(e, (a) => {
+          const i = window.location;
           "pageEnd" === t
-            ? this.pagePv(t, a)
+            ? this.pagePv(t, i)
             : "load" === e
-            ? this.initPageUv(t, a)
-            : this.pagePv(t, a);
+            ? this.initPageUv(t, i)
+            : this.pagePv(t, i);
         });
       });
     }
@@ -191,30 +199,34 @@
     }
     formatParams(e) {
       const t = [];
-      for (const i in e)
-        t.push(`${encodeURIComponent(i)}=${encodeURIComponent(e[i])}`);
+      for (const a in e)
+        t.push(`${encodeURIComponent(a)}=${encodeURIComponent(e[a])}`);
       return t.join("&");
     }
     flush() {
       if (this.queue.length > 0) {
         const e = this.queue.shift(),
-          t = {
+          t = new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
+          a = {
             ...e,
             project: this.data.project,
             string3: this.data.markuser,
-            event_time: new Date().getTime(),
+            event_time:
+              "$uniqueview" === e.event_key ? t : new Date().getTime(),
             event_type: "track",
             member_id: this.data.member_id,
             source: e.source ? e.source : "",
             detail_id: this.data.customer_id,
             customer_id: this.data.customer_id,
             channel: this.data.channel,
-            event_id: a(),
+            event_id: i(),
           };
-        let i = new Blob([`${this.formatParams(Object.assign({}, t))}`], {
+        ("$uniqueview" !== e.event_key && "$pageview" !== e.event_key) ||
+          Object.assign(a, { ...this.extendData });
+        let s = new Blob([`${this.formatParams(Object.assign({}, a))}`], {
           type: "application/x-www-form-urlencoded",
         });
-        if (navigator.sendBeacon) navigator.sendBeacon(this.data.server_url, i);
+        if (navigator.sendBeacon) navigator.sendBeacon(this.data.server_url, s);
         else {
           const e = new XMLHttpRequest();
           e.open("POST", this.data.server_url, !1),
@@ -222,10 +234,10 @@
               "Content-Type",
               "application/json; charset=UTF-8"
             ),
-            e.send(JSON.stringify(t));
+            e.send(JSON.stringify(a));
         }
         this.flush(), clearTimeout(this.timer), (this.timer = null);
-      }
+      } else this.extendData = {};
     }
   })();
 });

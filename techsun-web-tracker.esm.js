@@ -35,6 +35,7 @@ var s = new (class {
   queue;
   timer;
   pages;
+  extendData;
   constructor() {
     (this.data = {
       historyTracker: !1,
@@ -49,10 +50,11 @@ var s = new (class {
       event_type: "",
       loc: {},
       sys: {},
-      delay: 1500,
+      delay: 1e3,
     }),
       (this.queue = []),
       (this.pages = []),
+      (this.extendData = {}),
       (this.timer = null),
       (window.history.pushState = t("pushState")),
       (window.history.replaceState = t("replaceState"));
@@ -152,8 +154,14 @@ var s = new (class {
     });
     const i = this.pages[this.pages.length - 2] || {},
       s = (this.pages[this.pages.length - 1] || {}).time - i.time;
-    this.queue.push({ event_key: "$pageView", string2: i.page, decimal1: s }),
+    this.queue.push({ event_key: "$pageview", dim1: i.page, decimal1: s }),
+      this.queue.push({ event_key: "$uniqueview", dim1: i.page }),
       this.report(a);
+  }
+  setPagePVData(e) {
+    setTimeout(() => {
+      this.extendData = { ...e };
+    }, this.data.delay + 500);
   }
   track(e, t) {
     this.queue.push({ source: e, event_key: "$click", ...t }), this.report();
@@ -187,11 +195,12 @@ var s = new (class {
   flush() {
     if (this.queue.length > 0) {
       const e = this.queue.shift(),
-        t = {
+        t = new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
+        a = {
           ...e,
           project: this.data.project,
           string3: this.data.markuser,
-          event_time: new Date().getTime(),
+          event_time: "$uniqueview" === e.event_key ? t : new Date().getTime(),
           event_type: "track",
           member_id: this.data.member_id,
           source: e.source ? e.source : "",
@@ -200,18 +209,20 @@ var s = new (class {
           channel: this.data.channel,
           event_id: i(),
         };
-      let a = new Blob([`${this.formatParams(Object.assign({}, t))}`], {
+      ("$uniqueview" !== e.event_key && "$pageview" !== e.event_key) ||
+        Object.assign(a, { ...this.extendData });
+      let s = new Blob([`${this.formatParams(Object.assign({}, a))}`], {
         type: "application/x-www-form-urlencoded",
       });
-      if (navigator.sendBeacon) navigator.sendBeacon(this.data.server_url, a);
+      if (navigator.sendBeacon) navigator.sendBeacon(this.data.server_url, s);
       else {
         const e = new XMLHttpRequest();
         e.open("POST", this.data.server_url, !1),
           e.setRequestHeader("Content-Type", "application/json; charset=UTF-8"),
-          e.send(JSON.stringify(t));
+          e.send(JSON.stringify(a));
       }
       this.flush(), clearTimeout(this.timer), (this.timer = null);
-    }
+    } else this.extendData = {};
   }
 })();
 export { s as default };

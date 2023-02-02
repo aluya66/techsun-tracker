@@ -204,10 +204,16 @@ var s = new (class {
           event_type: "track",
           member_id: this.data.member_id,
           source: e.source ? e.source : "",
-          detail_id: this.data.customer_id,
+          detail_id:
+            "$uniqueview" === e.event_key ? e.dim1 : this.data.customer_id,
           customer_id: this.data.customer_id,
           channel: this.data.channel,
-          event_id: i(),
+          event_id:
+            "$uniqueview" === e.event_key
+              ? this.data.customer_id
+                ? this.data.customer_id
+                : this.data.markuser
+              : i(),
         };
       ("$uniqueview" !== e.event_key && "$pageview" !== e.event_key) ||
         Object.assign(a, { ...this.extendData });

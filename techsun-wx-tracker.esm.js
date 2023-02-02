@@ -2,9 +2,9 @@ const e = (e) => {
     e = e || 10;
     var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789",
       a = t.length,
-      s = "";
-    for (let o = 0; o < e; o++) s += t.charAt(Math.floor(Math.random() * a));
-    return s + new Date().getTime();
+      o = "";
+    for (let s = 0; s < e; s++) o += t.charAt(Math.floor(Math.random() * a));
+    return o + new Date().getTime();
   },
   t = () => {
     for (var e = [], t = "0123456789abcdef", a = 0; a < 36; a++)
@@ -51,7 +51,7 @@ var a = new (class {
   _proxyApp() {
     const t = this;
     App = (a) => {
-      const s = a.onShow || function () {};
+      const o = a.onShow || function () {};
       (a.onShow = function () {
         const a = e();
         return (
@@ -59,7 +59,7 @@ var a = new (class {
           t.pages.push({ time: new Date().getTime(), page: "" }),
           (t.commonData.markuser = a),
           (t.commonData.markuv = t._markUv()),
-          s.apply(this, arguments)
+          o.apply(this, arguments)
         );
       }),
         t.originApp(a);
@@ -91,11 +91,11 @@ var a = new (class {
           a.apply(this, arguments)
         );
       };
-      const s = t.onPullDownRefresh || function () {};
+      const o = t.onPullDownRefresh || function () {};
       t.onPullDownRefresh = function () {
-        return s.apply(this, arguments);
+        return o.apply(this, arguments);
       };
-      const o = t.onHide || function () {};
+      const s = t.onHide || function () {};
       (t.onHide = function () {
         let t = "",
           a = getCurrentPages();
@@ -108,12 +108,12 @@ var a = new (class {
         ) {
           const t = e.pages[e.pages.length - 2] || {},
             a = e.pages[e.pages.length - 1] || {},
-            s = a.time - t.time;
-          e.queue.push({ event_key: "$pageview", dim1: a.page, decimal1: s }),
+            o = a.time - t.time;
+          e.queue.push({ event_key: "$pageview", dim1: a.page, decimal1: o }),
             e.queue.push({ event_key: "$uniqueview", dim1: a.page }),
             e._reporter();
         }
-        return o.apply(this, arguments);
+        return s.apply(this, arguments);
       }),
         e.originPage(t);
     };
@@ -139,8 +139,8 @@ var a = new (class {
   _markUv() {
     const t = new Date();
     let a = wx.getStorageSync("techsun_wx_mark_uv") || "";
-    const s = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
-      o =
+    const o = wx.getStorageSync("techsun_wx_mark_uv_time") || "",
+      s =
         t.getFullYear() +
         "/" +
         (t.getMonth() + 1) +
@@ -148,12 +148,12 @@ var a = new (class {
         t.getDate() +
         " 23:59:59";
     return (
-      ((!a && !s) || t.getTime() > 1 * s) &&
+      ((!a && !o) || t.getTime() > 1 * o) &&
         ((a = e()),
         wx.setStorage({ key: "techsun_wx_mark_uv", data: a }),
         wx.setStorage({
           key: "techsun_wx_mark_uv_time",
-          data: new Date(o).getTime(),
+          data: new Date(s).getTime(),
         }),
         this.queue.push({ event_key: "$wxPageLoad" }),
         this._reporter()),
@@ -178,33 +178,35 @@ var a = new (class {
     if (this.queue.length > 0) {
       const e = this.queue.shift(),
         a = this,
-        s = new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
-        o = {
+        o = new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
+        s = {
           ...e,
           project: a.commonData.project,
           string3: a.commonData.markuser,
-          event_time: "$uniqueview" === e.event_key ? s : new Date().getTime(),
+          event_time: "$uniqueview" === e.event_key ? o : new Date().getTime(),
           event_type: "track",
           member_id: this.commonData.member_id,
           source: e.source ? e.source : "",
           detail_id:
-            "$uniqueview" === e.event_key ? e.dim1 : this.data.customer_id,
+            "$uniqueview" === e.event_key
+              ? e.dim1
+              : this.commonData.customer_id,
           customer_id: a.commonData.customer_id,
           channel: a.commonData.channel,
           event_id:
             "$uniqueview" === e.event_key
-              ? this.data.customer_id
-                ? this.data.customer_id
-                : this.data.markuser
+              ? this.commonData.customer_id
+                ? this.commonData.customer_id
+                : this.commonData.markuser
               : t(),
         };
       ("$uniqueview" !== e.event_key && "$pageview" !== e.event_key) ||
-        Object.assign(o, { ...a.extendData }),
+        Object.assign(s, { ...a.extendData }),
         this.wxRequest({
           url: this.commonData.server_url,
           timeout: 3e4,
           method: "POST",
-          data: { ...o },
+          data: { ...s },
           success: () => {},
           fail: ({ errMsg: e }) => {
             console.error(e);

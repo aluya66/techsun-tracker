@@ -51,6 +51,8 @@
 
   ```
    techsunTracker.init({
+        appId:'we23f23kjhg4hgj56hsd', // 用于加签
+        appKey:'sad0vb98e685fhr87t6ert', // 用于加签
         server_url: 'http://dev-cdp-02:50000',  //上报地址
         project: 'asus-cn',  // 固定
         channel: "", //从浏览器URL参数获取或者手动配置 见埋点文档渠道
@@ -116,6 +118,8 @@
 
 ```
  techsunWxTrack.init({
+  appId:'we23f23kjhg4hgj56hsd', // 用于加签
+  appKey:'sad0vb98e685fhr87t6ert', // 用于加签
   server_url: 'http://dev-cdp-02:50000',  //上报地址
   project: 'asus-cn',  // 固定
   channel: "", // 从跳转的参数中获取或者手动配置 见埋点文档渠道

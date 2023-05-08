@@ -11,8 +11,8 @@ interface DefaultOptons {
     sys: object | undefined;
     server_url: string;
     project: string;
-    appId: string;
-    appKey: string;
+    a: string;
+    b: string;
     historyTracker: boolean;
     hashTracker: boolean;
     delay: number;
@@ -26,8 +26,8 @@ interface DefaultOptons {
 interface initOptions extends Partial<DefaultOptons> {
     server_url: string;
     project: string;
-    appId: string;
-    appKey: string;
+    a: string;
+    b: string;
 }
 
 /**

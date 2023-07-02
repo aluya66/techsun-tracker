@@ -51,13 +51,13 @@
 
   ```
    techsunTracker.init({
-        a:'we23f23kjhg4hgj56hsd', // 用于加签
-        b:'sad0vb98e685fhr87t6ert', // 用于加签
         server_url: 'http://dev-cdp-02:50000',  //上报地址
         project: 'asus-cn',  // 固定
         channel: "", //从浏览器URL参数获取或者手动配置 见埋点文档渠道
         historyTracker: true, // 默认false, history模式 与hash 二选一
         hashTracker： fase, // 默认false,  hash模式，与history 二选一
+        event_mark: '001',  // 选填 区分渠道
+        parameter: {}, // 选填 拓展参数
   })
   ```
 > 上述代码建议进行混淆处理
@@ -119,12 +119,12 @@
 
 ```
  techsunWxTrack.init({
-  a:'we23f23kjhg4hgj56hsd', // 用于加签
-  b:'sad0vb98e685fhr87t6ert', // 用于加签
   server_url: 'http://dev-cdp-02:50000',  //上报地址
   project: 'asus-cn',  // 固定
   channel: "", // 从跳转的参数中获取或者手动配置 见埋点文档渠道
   autoTrack: true, // 默认为true,开启自动检测页面浏览时长和浏览记录以及UV
+  event_mark: '001',  // 选填 区分渠道
+  parameter: {}, // 选填 拓展参数
 })
 ```
 > 上述代码建议进行混淆处理

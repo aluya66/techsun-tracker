@@ -22,12 +22,12 @@ interface DefaultOptons {
     detail_id: string;
     event_id: string;
     event_type: string;
+    event_mark: string;
+    parameter: object | undefined;
 }
 interface initOptions extends Partial<DefaultOptons> {
     server_url: string;
     project: string;
-    a: string;
-    b: string;
 }
 
 /**
@@ -42,6 +42,7 @@ declare class TechsunTracker {
     private extendData;
     constructor();
     init(options: initOptions): void;
+    private getUrlParams;
     private markUv;
     setUserId<T extends string>(userId: T, memberId: T): void;
     private captureHideEvents;
